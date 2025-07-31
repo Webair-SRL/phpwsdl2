@@ -274,6 +274,6 @@ PhpWSDL2 is developed by [tQuadra](https://www.tquadra.it) and is inspired by th
 
 ## Support
 
-- 📖 [Documentation](https://github.com/tquadra/phpwsdl2/wiki)
-- 🐛 [Issue Tracker](https://github.com/tquadra/phpwsdl2/issues)
-- 💬 [Discussions](https://github.com/tquadra/phpwsdl2/discussions)
+- 📖 [Documentation](https://github.com/webair-srl/phpwsdl2/wiki)
+- 🐛 [Issue Tracker](https://github.com/webair-srl/phpwsdl2/issues)
+- 💬 [Discussions](https://github.com/webair-srl/phpwsdl2/discussions)

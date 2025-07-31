@@ -57,5 +57,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - laminas/laminas-soap ^2.10
 - tecnickcom/tcpdf ^6.4
 
-[Unreleased]: https://github.com/tquadra/phpwsdl2/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/tquadra/phpwsdl2/releases/tag/v1.0.0
+[Unreleased]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/webair-srl/phpwsdl2/releases/tag/v1.0.0

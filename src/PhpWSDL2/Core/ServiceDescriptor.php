@@ -276,7 +276,7 @@ class ServiceDescriptor
     {
         return '
     <hr>
-    <p><em>Powered by <a href="https://github.com/tquadra/phpwsdl2" target="_blank">PhpWSDL2</a> - PDF download: <a href="' . htmlspecialchars($this->endpoint) . '?PDF" target="_blank">Download this page as PDF</a></em></p>
+    <p><em>Powered by <a href="https://github.com/webair-srl/phpwsdl2" target="_blank">PhpWSDL2</a> - PDF download: <a href="' . htmlspecialchars($this->endpoint) . '?PDF" target="_blank">Download this page as PDF</a></em></p>
 </body>
 </html>';
     }

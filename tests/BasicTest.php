@@ -65,7 +65,7 @@ function runBasicTests(): void
                 }
             }
 
-            if ($composer['name'] !== 'tquadra/phpwsdl2') {
+            if ($composer['name'] !== 'webair-srl/phpwsdl2') {
                 throw new Exception("Incorrect package name");
             }
 
