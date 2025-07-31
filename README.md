@@ -20,7 +20,7 @@ PhpWSDL2 is a modern PHP library for creating WSDL/SOAP web services with suppor
 Install PhpWSDL2 via Composer:
 
 ```bash
-composer require tquadra/phpwsdl2
+composer require webair-srl/phpwsdl2
 ```
 
 ## Quick Start
