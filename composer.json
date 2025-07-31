@@ -1,9 +1,9 @@
 {
-    "name": "tquadra/phpwsdl2",
+    "name": "webair-srl/phpwsdl2",
     "description": "PhpWSDL2 - Modern PHP WSDL/SOAP WebService Library with Multiple Protocol Support",
     "type": "library",
     "keywords": ["wsdl", "soap", "webservice", "json", "rest", "rpc", "http", "client", "server"],
-    "homepage": "https://github.com/tquadra/phpwsdl2",
+    "homepage": "https://github.com/Webair-SRL/phpwsdl2",
     "license": "MIT",
     "authors": [
         {
