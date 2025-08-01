@@ -52,7 +52,23 @@ class PhpWSDL2
     public function handleRequest(): void
     {
         $queryString = $_SERVER['QUERY_STRING'] ?? '';
-        $pathInfo = $_SERVER['PATH_INFO'] ?? '';
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        $path = parse_url($requestUri, PHP_URL_PATH);
+
+        $serviceName = trim($this->serviceName, '/'); // es: PIMWS
+        $pathInfo = '';
+
+        // Trova "/$serviceName/" all'interno della URI
+        $pos = stripos($path, '/' . $serviceName . '/');
+        if ($pos !== false) {
+            $pathInfo = substr($path, $pos + strlen('/' . $serviceName));
+            $pathInfo = '/' . ltrim($pathInfo, '/');
+        } else {
+            // fallback se path è esattamente /PIMWS (senza trailing slash)
+            if (rtrim($path, '/') === '/' . $serviceName) {
+                $pathInfo = '/';
+            }
+        }
 
         // Handle WSDL requests
         if (stripos($queryString, 'wsdl') !== false) {
