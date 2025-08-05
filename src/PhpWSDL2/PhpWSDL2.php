@@ -88,7 +88,7 @@ class PhpWSDL2
         }
 
         // Handle REST requests
-        if (!empty($pathInfo)) {
+        if (!empty($pathInfo) && $pathInfo != '/') {
             $this->server->handleRestRequest($pathInfo);
             return;
         }
