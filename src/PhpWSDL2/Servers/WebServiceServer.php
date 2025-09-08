@@ -73,7 +73,17 @@ class WebServiceServer
      */
     public function handleRestRequest(string $pathInfo): void
     {
-        $path = trim($pathInfo, "/");
+        $path = $pathInfo;
+
+// rimuove lo slash iniziale se presente
+        if (substr($path, 0, 1) === '/') {
+            $path = substr($path, 1);
+        }
+
+// rimuove lo slash finale se presente
+        if (substr($path, -1) === '/') {
+            $path = substr($path, 0, -1);
+        }
         $parts = explode('/', $path);
         $method = array_shift($parts);
 
