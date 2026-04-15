@@ -17,7 +17,6 @@
         "ext-soap": "*",
         "ext-json": "*",
         "ext-reflection": "*",
-        "laminas/laminas-soap": "^2.10",
         "tecnickcom/tcpdf": "^6.4",
         "setasign/fpdi": "^2.3"
     },

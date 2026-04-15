@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace PhpWSDL2\Servers;
 
-use Laminas\Soap\AutoDiscover;
-use Laminas\Soap\Server;
 use ReflectionClass;
+use ReflectionMethod;
+use ReflectionParameter;
 use Exception;
+use SoapServer;
 
 /**
  * WebServiceServer - Handles incoming web service requests
@@ -45,11 +46,7 @@ class WebServiceServer
     public function handleWsdlRequest(): void
     {
         header('Content-Type: text/xml');
-        $autodiscover = new AutoDiscover();
-        $autodiscover->setClass($this->serviceClass)
-            ->setUri($this->endpoint)
-            ->setServiceName($this->serviceName);
-        $autodiscover->handle();
+        echo $this->generateWsdl();
     }
 
     /**
@@ -63,7 +60,7 @@ class WebServiceServer
             $this->generateWsdlFile($wsdlFile);
         }
 
-        $server = new Server($wsdlFile, $this->soapOptions);
+        $server = new SoapServer($wsdlFile, $this->soapOptions);
         $server->setClass($this->serviceClass);
         $server->handle();
     }
@@ -256,11 +253,123 @@ class WebServiceServer
      */
     public function generateWsdl(): string
     {
-        $autodiscover = new AutoDiscover();
-        $autodiscover->setClass($this->serviceClass)
-            ->setUri($this->endpoint)
-            ->setServiceName($this->serviceName);
-        return $autodiscover->toXml();
+        $reflection = new ReflectionClass($this->serviceClass);
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        // Filter out constructor, destructor and inherited methods
+        $serviceMethods = [];
+        foreach ($methods as $method) {
+            if (!$method->isConstructor() &&
+                !$method->isDestructor() &&
+                $method->getDeclaringClass()->getName() === $this->serviceClass) {
+                $serviceMethods[] = $method;
+            }
+        }
+
+        $wsdl = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $wsdl .= '<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" ' .
+                 'xmlns:tns="' . $this->endpoint . '" ' .
+                 'xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" ' .
+                 'xmlns:xsd="http://www.w3.org/2001/XMLSchema" ' .
+                 'targetNamespace="' . $this->endpoint . '">' . "\n";
+
+        // Types section
+        $wsdl .= '<types>' . "\n";
+        $wsdl .= '<xsd:schema targetNamespace="' . $this->endpoint . '">' . "\n";
+        $wsdl .= '</xsd:schema>' . "\n";
+        $wsdl .= '</types>' . "\n";
+
+        // Messages section
+        foreach ($serviceMethods as $method) {
+            $methodName = $method->getName();
+
+            // Request message
+            $wsdl .= '<message name="' . $methodName . 'Request">' . "\n";
+            foreach ($method->getParameters() as $param) {
+                $paramType = $this->getParameterType($param);
+                $wsdl .= '<part name="' . $param->getName() . '" type="xsd:' . $paramType . '"/>' . "\n";
+            }
+            $wsdl .= '</message>' . "\n";
+
+            // Response message
+            $wsdl .= '<message name="' . $methodName . 'Response">' . "\n";
+            $returnType = $this->getReturnType($method);
+            $wsdl .= '<part name="return" type="xsd:' . $returnType . '"/>' . "\n";
+            $wsdl .= '</message>' . "\n";
+        }
+
+        // PortType section
+        $wsdl .= '<portType name="' . $this->serviceName . 'PortType">' . "\n";
+        foreach ($serviceMethods as $method) {
+            $methodName = $method->getName();
+            $wsdl .= '<operation name="' . $methodName . '">' . "\n";
+            $wsdl .= '<input message="tns:' . $methodName . 'Request"/>' . "\n";
+            $wsdl .= '<output message="tns:' . $methodName . 'Response"/>' . "\n";
+            $wsdl .= '</operation>' . "\n";
+        }
+        $wsdl .= '</portType>' . "\n";
+
+        // Binding section
+        $wsdl .= '<binding name="' . $this->serviceName . 'Binding" type="tns:' . $this->serviceName . 'PortType">' . "\n";
+        $wsdl .= '<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>' . "\n";
+        foreach ($serviceMethods as $method) {
+            $methodName = $method->getName();
+            $wsdl .= '<operation name="' . $methodName . '">' . "\n";
+            $wsdl .= '<soap:operation soapAction="' . $this->endpoint . '#' . $methodName . '"/>' . "\n";
+            $wsdl .= '<input><soap:body use="encoded" namespace="' . $this->endpoint . '" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>' . "\n";
+            $wsdl .= '<output><soap:body use="encoded" namespace="' . $this->endpoint . '" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>' . "\n";
+            $wsdl .= '</operation>' . "\n";
+        }
+        $wsdl .= '</binding>' . "\n";
+
+        // Service section
+        $wsdl .= '<service name="' . $this->serviceName . '">' . "\n";
+        $wsdl .= '<port name="' . $this->serviceName . 'Port" binding="tns:' . $this->serviceName . 'Binding">' . "\n";
+        $wsdl .= '<soap:address location="' . $this->endpoint . '"/>' . "\n";
+        $wsdl .= '</port>' . "\n";
+        $wsdl .= '</service>' . "\n";
+
+        $wsdl .= '</definitions>' . "\n";
+
+        return $wsdl;
+    }
+
+    /**
+     * Get parameter type for WSDL
+     */
+    private function getParameterType(ReflectionParameter $param): string
+    {
+        $type = $param->getType();
+        if ($type instanceof \ReflectionNamedType) {
+            $typeName = $type->getName();
+            switch ($typeName) {
+                case 'int': return 'int';
+                case 'float': return 'float';
+                case 'bool': return 'boolean';
+                case 'array': return 'string'; // Arrays as strings in SOAP
+                default: return 'string';
+            }
+        }
+        return 'string';
+    }
+
+    /**
+     * Get return type for WSDL
+     */
+    private function getReturnType(ReflectionMethod $method): string
+    {
+        $type = $method->getReturnType();
+        if ($type instanceof \ReflectionNamedType) {
+            $typeName = $type->getName();
+            switch ($typeName) {
+                case 'int': return 'int';
+                case 'float': return 'float';
+                case 'bool': return 'boolean';
+                case 'array': return 'string'; // Arrays as strings in SOAP
+                default: return 'string';
+            }
+        }
+        return 'string';
     }
 
     /**

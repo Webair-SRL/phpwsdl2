@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://localhost/test" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost/test">
+<types>
+<xsd:schema targetNamespace="http://localhost/test">
+</xsd:schema>
+</types>
+<message name="sayHelloRequest">
+<part name="name" type="xsd:string"/>
+</message>
+<message name="sayHelloResponse">
+<part name="return" type="xsd:string"/>
+</message>
+<message name="addRequest">
+<part name="a" type="xsd:int"/>
+<part name="b" type="xsd:int"/>
+</message>
+<message name="addResponse">
+<part name="return" type="xsd:int"/>
+</message>
+<portType name="TestServicePortType">
+<operation name="sayHello">
+<input message="tns:sayHelloRequest"/>
+<output message="tns:sayHelloResponse"/>
+</operation>
+<operation name="add">
+<input message="tns:addRequest"/>
+<output message="tns:addResponse"/>
+</operation>
+</portType>
+<binding name="TestServiceBinding" type="tns:TestServicePortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+<operation name="sayHello">
+<soap:operation soapAction="http://localhost/test#sayHello"/>
+<input><soap:body use="encoded" namespace="http://localhost/test" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+<output><soap:body use="encoded" namespace="http://localhost/test" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+</operation>
+<operation name="add">
+<soap:operation soapAction="http://localhost/test#add"/>
+<input><soap:body use="encoded" namespace="http://localhost/test" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+<output><soap:body use="encoded" namespace="http://localhost/test" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+</operation>
+</binding>
+<service name="TestService">
+<port name="TestServicePort" binding="tns:TestServiceBinding">
+<soap:address location="http://localhost/test"/>
+</port>
+</service>
+</definitions>
