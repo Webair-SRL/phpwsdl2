@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-07-14
+
+### Changed
+- Remove the unused FPDI dependency, whose TCPDF adapter is not compatible with TCPDF 7.
+
 ## [1.0.3] - 2026-07-14
 
 ### Changed
@@ -69,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - laminas/laminas-soap ^2.10
 - tecnickcom/tcpdf ^6.4
 
-[Unreleased]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.2...v1.0.3
 [1.0.0]: https://github.com/webair-srl/phpwsdl2/releases/tag/v1.0.0

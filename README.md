@@ -280,7 +280,6 @@ Generate PDF documentation with:
 - ext-json
 - ext-reflection
 - tecnickcom/tcpdf ^7.0 (for PDF generation)
-- setasign/fpdi ^2.6.7
 - `make` and outbound network access during font asset initialization
 
 ## Contributing

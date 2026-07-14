@@ -77,10 +77,6 @@ function runBasicTests(): void
                 throw new Exception("PhpWSDL2 must require TCPDF 7");
             }
 
-            if (($composer['require']['setasign/fpdi'] ?? null) !== '^2.6.7') {
-                throw new Exception("PhpWSDL2 must require a patched FPDI release");
-            }
-
             return "Composer configuration valid";
         },
 
