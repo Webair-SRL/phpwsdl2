@@ -34,7 +34,7 @@ class TestService
 }
 
 try {
-    echo "Testing current SOAP functionality with Laminas...\n";
+    echo "Testing current SOAP functionality with the native PHP SOAP extension...\n";
 
     // Create WebServiceServer instance
     $server = new WebServiceServer(

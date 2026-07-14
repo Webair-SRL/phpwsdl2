@@ -69,6 +69,18 @@ function runBasicTests(): void
                 throw new Exception("Incorrect package name");
             }
 
+            if (($composer['require']['php'] ?? null) !== '>=8.2') {
+                throw new Exception("PhpWSDL2 must require PHP 8.2 or newer");
+            }
+
+            if (($composer['require']['tecnickcom/tcpdf'] ?? null) !== '^7.0') {
+                throw new Exception("PhpWSDL2 must require TCPDF 7");
+            }
+
+            if (($composer['require']['setasign/fpdi'] ?? null) !== '^2.6.7') {
+                throw new Exception("PhpWSDL2 must require a patched FPDI release");
+            }
+
             return "Composer configuration valid";
         },
 

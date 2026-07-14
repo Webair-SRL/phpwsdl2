@@ -1,7 +1,7 @@
 # PhpWSDL2
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.0-blue.svg)](https://php.net/)
+[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.2-blue.svg)](https://php.net/)
 
 PhpWSDL2 is a modern PHP library for creating WSDL/SOAP web services with support for multiple protocols including SOAP, JSON, REST, XML-RPC, and HTTP. It provides automatic service description generation, client code generation, and comprehensive documentation features.
 
@@ -10,7 +10,7 @@ PhpWSDL2 is a modern PHP library for creating WSDL/SOAP web services with suppor
 - 🚀 **Multiple Protocol Support**: SOAP, JSON, REST, XML-RPC, HTTP
 - 📝 **Automatic Documentation**: HTML service descriptors and PDF generation
 - 🔧 **Client Code Generation**: Generate clients for PHP, JavaScript, and more
-- 🎯 **Modern PHP**: Built for PHP 8.0+ with strict typing
+- 🎯 **Modern PHP**: Built for PHP 8.2+ with strict typing
 - 📦 **Framework Independent**: Works with any PHP application
 - 🔍 **Reflection-Based**: Automatic service discovery using PHP reflection
 - 🎨 **Professional Output**: Clean, well-formatted documentation and clients
@@ -21,6 +21,28 @@ Install PhpWSDL2 via Composer:
 
 ```bash
 composer require webair-srl/phpwsdl2
+```
+
+TCPDF 7 generates its font assets in the consuming project. Because Composer does not
+execute scripts declared by dependencies, add the following script to the root
+`composer.json` of the application that installs PhpWSDL2:
+
+```json
+{
+    "scripts": {
+        "tcpdf-fonts": [
+            "[ ! -d vendor/tecnickcom/tc-lib-pdf-font ] || [ -f vendor/tecnickcom/tc-lib-pdf-font/target/fonts/core/helvetica.json ] || make -C vendor/tecnickcom/tc-lib-pdf-font deps fonts"
+        ],
+        "post-install-cmd": ["@tcpdf-fonts"],
+        "post-update-cmd": ["@tcpdf-fonts"]
+    }
+}
+```
+
+For an existing installation, initialize the fonts once with:
+
+```bash
+make -C vendor/tecnickcom/tc-lib-pdf-font deps fonts
 ```
 
 ## Quick Start
@@ -253,12 +275,13 @@ Generate PDF documentation with:
 
 ## Requirements
 
-- PHP 8.0 or higher
+- PHP 8.2 or higher
 - ext-soap
 - ext-json
 - ext-reflection
-- laminas/laminas-soap
-- tecnickcom/tcpdf (for PDF generation)
+- tecnickcom/tcpdf ^7.0 (for PDF generation)
+- setasign/fpdi ^2.6.7
+- `make` and outbound network access during font asset initialization
 
 ## Contributing
 

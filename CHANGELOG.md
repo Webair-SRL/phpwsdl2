@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-07-14
+
+### Changed
+- Require PHP 8.2 or higher and TCPDF ^7.0, so Composer installs the latest compatible TCPDF 7 release.
+- Require FPDI ^2.6.7 and patched PHPUnit development releases.
+- Initialize TCPDF 7 font assets for direct installs and document the required root-project hook for consumers.
+- Replace the Laminas SOAP runtime with the native PHP SOAP extension and reflection-based WSDL generation.
+
+### Fixed
+- Resolve TCPDF 7 generated font assets before creating PDF documentation.
+- Preserve empty positional parameters in REST request paths.
+
 ## [1.0.0] - 2024-07-31
 
 ### Added
@@ -57,5 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - laminas/laminas-soap ^2.10
 - tecnickcom/tcpdf ^6.4
 
-[Unreleased]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/webair-srl/phpwsdl2/compare/v1.0.2...v1.0.3
 [1.0.0]: https://github.com/webair-srl/phpwsdl2/releases/tag/v1.0.0

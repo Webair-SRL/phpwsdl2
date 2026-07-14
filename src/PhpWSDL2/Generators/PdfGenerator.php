@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpWSDL2\Generators;
 
+use Composer\InstalledVersions;
 use ReflectionClass;
 use ReflectionMethod;
 use TCPDF;
@@ -33,6 +34,8 @@ class PdfGenerator
      */
     public function generate(): string
     {
+        $this->configureTcpdfFonts();
+
         // Create PDF using TCPDF
         $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
@@ -76,6 +79,27 @@ class PdfGenerator
         $pdf->writeHTML($html, true, false, true, false, '');
 
         return $pdf->Output('', 'S'); // Return as string
+    }
+
+    /**
+     * Configure the generated font assets required by TCPDF 7.
+     */
+    private function configureTcpdfFonts(): void
+    {
+        if (defined('K_PATH_FONTS')) {
+            return;
+        }
+
+        $fontPackagePath = InstalledVersions::getInstallPath('tecnickcom/tc-lib-pdf-font');
+        if ($fontPackagePath === null) {
+            return;
+        }
+
+        $fontPackagePath = realpath($fontPackagePath) ?: $fontPackagePath;
+        $fontPath = $fontPackagePath . '/target/fonts/';
+        if (is_dir($fontPath)) {
+            define('K_PATH_FONTS', $fontPath);
+        }
     }
 
     /**
